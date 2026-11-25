@@ -52,7 +52,43 @@ public class LoggerForm : Form
         _startButton.Click += (_, _) => { _log.Start(); ShowStatus(true); _logList.Focus(); };
         _stopButton.Click += (_, _) => { _log.Stop(); ShowStatus(false); };
 
+        _clearButton.Click += (_, _) => ClearLog();
+        _saveButton.Click += (_, _) => SaveLog();
+
         ShowStatus(recording: false);
+    }
+
+    private void ClearLog()
+    {
+        _log.Clear();
+        _logList.Items.Clear();
+    }
+
+    private void SaveLog()
+    {
+        if (_log.Entries.Count == 0)
+        {
+            MessageBox.Show(this, "Kaydedilecek olay yok.", Text);
+            return;
+        }
+
+        using var dialog = new SaveFileDialog
+        {
+            Filter = "Metin dosyası (*.txt)|*.txt",
+            FileName = $"tus-kayitlari-{DateTime.Now:yyyyMMdd-HHmmss}.txt"
+        };
+        if (dialog.ShowDialog(this) != DialogResult.OK) return;
+
+        try
+        {
+            _log.Save(dialog.FileName);
+            MessageBox.Show(this, "Kayıtlar kaydedildi.", Text);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show(this, "Dosya yazılamadı: " + ex.Message, "Hata",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     // Tab, ok ve Enter tuşları da kayıt sırasında KeyDown olayına ulaşsın.

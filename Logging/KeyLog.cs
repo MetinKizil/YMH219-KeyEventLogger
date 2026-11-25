@@ -10,6 +10,10 @@ public class KeyLog
 
     public void Start() => IsRecording = true;
     public void Stop() => IsRecording = false;
+    public void Clear() => _entries.Clear();
+
+    public void Save(string path) =>
+        File.WriteAllLines(path, _entries.Select(e => e.ToString()));
 
     /// <summary>Kayıt açıksa olayı ekler; kapalıysa null döner.</summary>
     public KeyLogEntry? Add(string eventName, Keys keyData)
