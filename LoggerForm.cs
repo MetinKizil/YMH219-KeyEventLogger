@@ -1,8 +1,11 @@
+using KeyEventLogger.Logging;
+
 namespace KeyEventLogger;
 
 /// <summary>Arayüz: butonlar, kayıt listesi ve durum göstergesi.</summary>
 public class LoggerForm : Form
 {
+    private readonly KeyLog _log = new();
     private readonly Button _startButton = new() { Text = "Başlat", AutoSize = true };
     private readonly Button _stopButton = new() { Text = "Durdur", AutoSize = true, Enabled = false };
     private readonly Button _clearButton = new() { Text = "Temizle", AutoSize = true };
@@ -41,7 +44,35 @@ public class LoggerForm : Form
         Controls.Add(_statusLabel);
         Controls.Add(notice);
 
+        // Yalnızca formun kendi olayları dinlenir; global klavye kancası yoktur.
+        KeyPreview = true;
+        KeyDown += (_, e) => Capture("KeyDown", e);
+        KeyUp += (_, e) => Capture("KeyUp", e);
+
+        _startButton.Click += (_, _) => { _log.Start(); ShowStatus(true); _logList.Focus(); };
+        _stopButton.Click += (_, _) => { _log.Stop(); ShowStatus(false); };
+
         ShowStatus(recording: false);
+    }
+
+    // Tab, ok ve Enter tuşları da kayıt sırasında KeyDown olayına ulaşsın.
+    protected override bool ProcessDialogKey(Keys keyData) =>
+        !_log.IsRecording && base.ProcessDialogKey(keyData);
+
+    private void Capture(string eventName, KeyEventArgs e)
+    {
+        KeyLogEntry? entry = _log.Add(eventName, e.KeyData);
+        if (entry is null) return;
+
+        _logList.Items.Add(entry);
+        _logList.TopIndex = _logList.Items.Count - 1; // son kayda kaydır
+
+        // Boşluk/Enter butonları tetiklemesin; Alt+F4 çalışmaya devam etsin.
+        if (!(e.Alt && e.KeyCode == Keys.F4))
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
     }
 
     private void ShowStatus(bool recording)
