@@ -46,8 +46,8 @@ public class LoggerForm : Form
 
         // Yalnızca formun kendi olayları dinlenir; global klavye kancası yoktur.
         KeyPreview = true;
-        KeyDown += (_, e) => Capture("KeyDown", e);
-        KeyUp += (_, e) => Capture("KeyUp", e);
+        KeyDown += (_, e) => LogKey("KeyDown", e);
+        KeyUp += (_, e) => LogKey("KeyUp", e);
 
         _startButton.Click += (_, _) => { _log.Start(); ShowStatus(true); _logList.Focus(); };
         _stopButton.Click += (_, _) => { _log.Stop(); ShowStatus(false); };
@@ -95,7 +95,7 @@ public class LoggerForm : Form
     protected override bool ProcessDialogKey(Keys keyData) =>
         !_log.IsRecording && base.ProcessDialogKey(keyData);
 
-    private void Capture(string eventName, KeyEventArgs e)
+    private void LogKey(string eventName, KeyEventArgs e)
     {
         KeyLogEntry? entry = _log.Add(eventName, e.KeyData);
         if (entry is null) return;
