@@ -41,7 +41,13 @@ Bu uygulama sistem genelinde çalışan bir keylogger değildir. Yalnızca kendi
 
 ## Ekran Görüntüleri
 
-_(en az 2 ekran görüntüsü eklenecek)_
+**Kayıt açıkken**
+
+![Kayıt açıkken](screenshots/kayit-acik.png)
+
+**Kayıt kapalıyken**
+
+![Kayıt kapalıyken](screenshots/kayit-kapali.png)
 
 ## Bilinen Sınırlamalar
 
