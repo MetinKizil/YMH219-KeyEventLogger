@@ -25,6 +25,7 @@ Visual Studio ile: `YMH219-KeyEventLogger.csproj` dosyasını açıp F5'e bas.
 - **Başlat / Durdur** ile kayıt kontrolü ve belirgin durum göstergesi
 - `KeyDown` ve `KeyUp` olaylarını tuş adı ve zaman bilgisiyle listeleme
 - **Temizle** ile kayıtları silme
+- Toplam tuş sayısı ve en sık basılan 5 tuşu anlık gösterme
 - **Kaydet** ile kayıtları `.txt` dosyasına yazma, dosya hatalarını bildirme
 
 ## Güvenlik Sınırı
@@ -37,6 +38,7 @@ Bu uygulama sistem genelinde çalışan bir keylogger değildir. Yalnızca kendi
 |---|---|
 | `KeyLogEntry` | Tek bir tuş olayının verisi ve metin biçimi |
 | `KeyLog` | Kayıt durumu, olay listesi ve dosyaya yazma |
+| `KeyStatistics` | Toplam ve en sık basılan tuşları hesaplama |
 | `LoggerForm` | Arayüz ve klavye olayları |
 
 ## Ekran Görüntüleri
@@ -53,5 +55,5 @@ Bu uygulama sistem genelinde çalışan bir keylogger değildir. Yalnızca kendi
 
 - Windows'un kendisinin işlediği bazı kısayollar (ör. Windows tuşu birleşimleri) görünmeyebilir.
 - Tuş adları .NET `Keys` değerleri olarak gösterilir.
-- Basılı tutulan tuş birden fazla `KeyDown` kaydı üretir.
+- Basılı tutulan tuş birden fazla `KeyDown` kaydı üretir ve istatistikte her biri sayılır.
 - Kayıt açıkken Tab ve ok tuşları arayüzde gezinmek için kullanılamaz.

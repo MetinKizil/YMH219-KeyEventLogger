@@ -12,6 +12,14 @@ public class LoggerForm : Form
     private readonly Button _saveButton = new() { Text = "Kaydet (.txt)", AutoSize = true };
     private readonly ListBox _logList = new() { Dock = DockStyle.Fill, IntegralHeight = false };
 
+    private readonly Label _statisticsLabel = new()
+    {
+        Dock = DockStyle.Bottom,
+        Height = 48,
+        TextAlign = ContentAlignment.MiddleCenter,
+        BackColor = Color.WhiteSmoke
+    };
+
     private readonly Label _statusLabel = new()
     {
         Dock = DockStyle.Top,
@@ -42,6 +50,7 @@ public class LoggerForm : Form
         Controls.Add(_logList);
         Controls.Add(buttons);
         Controls.Add(_statusLabel);
+        Controls.Add(_statisticsLabel);
         Controls.Add(notice);
 
         // Yalnızca formun kendi olayları dinlenir; global klavye kancası yoktur.
@@ -56,12 +65,14 @@ public class LoggerForm : Form
         _saveButton.Click += (_, _) => SaveLog();
 
         ShowStatus(recording: false);
+        ShowStatistics();
     }
 
     private void ClearLog()
     {
         _log.Clear();
         _logList.Items.Clear();
+        ShowStatistics();
     }
 
     private void SaveLog()
@@ -102,6 +113,7 @@ public class LoggerForm : Form
 
         _logList.Items.Add(entry);
         _logList.TopIndex = _logList.Items.Count - 1; // son kayda kaydır
+        ShowStatistics();
 
         // Boşluk/Enter butonları tetiklemesin; Alt+F4 çalışmaya devam etsin.
         if (!(e.Alt && e.KeyCode == Keys.F4))
@@ -110,6 +122,9 @@ public class LoggerForm : Form
             e.SuppressKeyPress = true;
         }
     }
+
+    private void ShowStatistics() =>
+        _statisticsLabel.Text = new KeyStatistics(_log.Entries).ToString();
 
     private void ShowStatus(bool recording)
     {
